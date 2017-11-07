@@ -1,0 +1,16 @@
+{
+  "env": {
+    "test": {
+      "presets": [["es2015"], "react"],
+      "plugins": ["syntax-object-rest-spread", "transform-object-rest-spread"]
+    },
+    "build": {
+      "presets": [["es2015", { "modules": false }], "react"],
+      "plugins": [
+        "external-helpers",
+        "syntax-object-rest-spread",
+        "transform-object-rest-spread"
+      ]
+    }
+  }
+}

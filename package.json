@@ -1,0 +1,58 @@
+{
+  "name": "react-promise-wrapper",
+  "version": "0.0.1",
+  "description": "React HOC wrapper to map promises to props",
+  "scripts": {
+    "build": "cross-env NODE_ENV=build rollup -c",
+    "dev": "cross-env NODE_ENV=build rollup -c -w",
+    "test": "jest",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,json}": ["prettier --write", "git add"]
+  },
+  "main": "dist/react-hoc-promises.cjs.js",
+  "module": "dist/react-hoc-promises.js",
+  "browser": "dist/react-hoc-promises.umd.js",
+  "keywords": ["react", "hoc", "promise"],
+  "author": "matthis-d",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-eslint": "^8.0.2",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.1.1",
+    "enzyme": "^3.1.1",
+    "enzyme-adapter-react-16": "^1.0.4",
+    "eslint": "^4.10.0",
+    "eslint-config-prettier": "^2.7.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "husky": "^0.14.3",
+    "jest": "^21.2.1",
+    "jest-cli": "^21.2.1",
+    "jest-enzyme": "^4.0.1",
+    "lint-staged": "^4.3.0",
+    "prettier": "^1.8.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-test-renderer": "^16.0.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0"
+  },
+  "files": ["dist"],
+  "peerDependencies": {
+    "react": ">=15.0.0"
+  },
+  "jest": {
+    "setupFiles": ["./jest.setup.js"],
+    "setupTestFrameworkScriptFile": "./node_modules/jest-enzyme/lib/index.js"
+  }
+}
