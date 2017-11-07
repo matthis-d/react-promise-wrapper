@@ -1,7 +1,7 @@
 {
   "name": "react-promise-wrapper",
   "version": "0.0.1",
-  "description": "React HOC wrapper to map promises to props",
+  "description": "React HOC to map promises to props",
   "scripts": {
     "build": "cross-env NODE_ENV=build rollup -c",
     "dev": "cross-env NODE_ENV=build rollup -c -w",
