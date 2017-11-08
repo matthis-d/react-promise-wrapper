@@ -1,6 +1,6 @@
 # React HOC promises
 
-![Travis](https://travis-ci.org/matthis-d/react-hoc-promises.svg?branch=master)
+[![Build Status](https://travis-ci.org/matthis-d/react-hoc-promises.svg?branch=master)](https://travis-ci.org/matthis-d/react-hoc-promises)
 ## Usage
 
 Write a component that will receive several props :
