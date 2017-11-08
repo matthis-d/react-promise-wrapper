@@ -1,11 +1,34 @@
 {
   "env": {
     "test": {
-      "presets": [["es2015"], "react"],
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": ["last 2 versions"],
+              "node": 6
+            }
+          }
+        ],
+        "react"
+      ],
       "plugins": ["syntax-object-rest-spread", "transform-object-rest-spread"]
     },
     "build": {
-      "presets": [["es2015", { "modules": false }], "react"],
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "browsers": ["last 2 versions"],
+              "node": 6
+            },
+            "modules": false
+          }
+        ],
+        "react"
+      ],
       "plugins": [
         "external-helpers",
         "syntax-object-rest-spread",
