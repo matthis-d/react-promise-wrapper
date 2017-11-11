@@ -21,7 +21,7 @@
   "keywords": ["react", "hoc", "promise"],
   "author": "matthis-d",
   "license": "ISC",
-  "homepage": "https://github.com/matthis-d/react-hoc-promises",
+  "homepage": "https://github.com/matthis-d/react-promise-wrapper",
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^8.0.2",

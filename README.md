@@ -3,6 +3,15 @@
 [![Build Status](https://travis-ci.org/matthis-d/react-hoc-promises.svg?branch=master)](https://travis-ci.org/matthis-d/react-hoc-promises)
 ## Usage
 
+Install via NPM or Yarn
+```
+npm install --save react-promise-wrapper
+````
+
+```
+yarn add react-promise-wrapper
+```
+
 Write a component that will receive several props :
 - `loading`: a boolean to insdicate if promises are done.
 - `error`: an error thrown if any of the promises fails
@@ -35,7 +44,7 @@ Then write a wrapper that will inject the promises thanks to the `withPromises` 
 // WithPromiseComponent.js
 
 // import the lib
-import withPromises from 'react-hoc-promises';
+import withPromises from 'react-promise-wrapper';
 
 // import your component
 import MyComponent from './MyComponent';
