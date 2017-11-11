@@ -32,7 +32,7 @@ export default [
   // the `targets` option which can specify `dest` and `format`)
   {
     input: 'src/withPromises.js',
-    output: { file: pkg.main, format: 'cjs' },
+    output: { file: pkg.common, format: 'cjs' },
     external: ['react'],
     plugins: [
       babel({
@@ -43,7 +43,7 @@ export default [
   {
     input: 'src/withPromises.js',
     external: ['react'],
-    output: { file: pkg.module, format: 'es' },
+    output: { file: pkg.main, format: 'es' },
     plugins: [
       babel({
         exclude: ['node_modules/**'],

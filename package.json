@@ -6,17 +6,22 @@
     "build": "cross-env NODE_ENV=build rollup -c",
     "dev": "cross-env NODE_ENV=build rollup -c -w",
     "test": "jest",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepublish": "npm run test && npm run build",
+    "preversion": "npm test",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags"
   },
   "lint-staged": {
     "*.{js,json}": ["prettier --write", "git add"]
   },
-  "main": "dist/react-hoc-promises.cjs.js",
-  "module": "dist/react-hoc-promises.js",
+  "main": "dist/react-hoc-promises.js",
+  "common": "dist/react-hoc-promises.cjs.js",
   "browser": "dist/react-hoc-promises.umd.js",
   "keywords": ["react", "hoc", "promise"],
   "author": "matthis-d",
   "license": "ISC",
+  "homepage": "https://github.com/matthis-d/react-hoc-promises",
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^8.0.2",
@@ -52,7 +57,7 @@
     "react": ">=15.0.0"
   },
   "jest": {
-    "setupFiles": ["./jest.setup.js"],
+    "setupFiles": ["./scripts/jest.setup.js"],
     "setupTestFrameworkScriptFile": "./node_modules/jest-enzyme/lib/index.js"
   }
 }
