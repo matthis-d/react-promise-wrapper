@@ -157,4 +157,21 @@ describe('withPromises wrapper', () => {
         expect(wrapper.find(WrappedComponent)).toHaveProp('loading', false);
       });
   });
+
+  it('should have withPromises(WrappedName) as display name', () => {
+    WrappedComponent.displayName = 'WrappedName';
+    WithPromisesComponent = withPromises({})(WrappedComponent);
+
+    expect(WithPromisesComponent.displayName).toEqual(
+      'withPromises(WrappedName)',
+    );
+  });
+
+  it('should have withPromises(WrappedComponent) as display name when no explicit displayName', () => {
+    WithPromisesComponent = withPromises({})(WrappedComponent);
+
+    expect(WithPromisesComponent.displayName).toEqual(
+      'withPromises(WrappedComponent)',
+    );
+  });
 });

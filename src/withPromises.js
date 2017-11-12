@@ -1,5 +1,9 @@
 import React from 'react';
 
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
 const withPromises = mapPromisesToProps => WrappedComponent => {
   class WithPromises extends React.Component {
     constructor(props) {
@@ -35,7 +39,9 @@ const withPromises = mapPromisesToProps => WrappedComponent => {
     }
   }
 
-  WithPromises.displayName = `withPromises(${WrappedComponent.displayName})`;
+  WithPromises.displayName = `withPromises(${getDisplayName(
+    WrappedComponent,
+  )})`;
 
   return WithPromises;
 };
