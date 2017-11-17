@@ -1,6 +1,6 @@
-# React HOC promises
+# React promise wrapper.
 
-[![Build Status](https://travis-ci.org/matthis-d/react-hoc-promises.svg?branch=master)](https://travis-ci.org/matthis-d/react-hoc-promises)
+[![Build Status](https://travis-ci.org/matthis-d/react-promise-wrapper.svg?branch=master)](https://travis-ci.org/matthis-d/react-promise-wrapper)
 ## Usage
 
 Install via NPM or Yarn
@@ -13,7 +13,7 @@ yarn add react-promise-wrapper
 ```
 
 Write a component that will receive several props :
-- `loading`: a boolean to insdicate if promises are done.
+- `loading`: a boolean to indicate if promises are done.
 - `error`: an error thrown if any of the promises fails
 - Your promises names.
 
