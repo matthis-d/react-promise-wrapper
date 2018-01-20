@@ -5,6 +5,7 @@ function _interopDefault(ex) {
 }
 
 var React = _interopDefault(require('react'));
+var PropTypes = _interopDefault(require('prop-types'));
 
 var asyncGenerator = (function() {
   function AwaitValue(value) {
@@ -199,6 +200,18 @@ var inherits = function(subClass, superClass) {
       : (subClass.__proto__ = superClass);
 };
 
+var objectWithoutProperties = function(obj, keys) {
+  var target = {};
+
+  for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+    target[i] = obj[i];
+  }
+
+  return target;
+};
+
 var possibleConstructorReturn = function(self, call) {
   if (!self) {
     throw new ReferenceError(
@@ -211,82 +224,102 @@ var possibleConstructorReturn = function(self, call) {
     : self;
 };
 
+var PromisesWrapper = (function(_React$Component) {
+  inherits(PromisesWrapper, _React$Component);
+
+  function PromisesWrapper(props) {
+    classCallCheck(this, PromisesWrapper);
+
+    var _this = possibleConstructorReturn(
+      this,
+      (
+        PromisesWrapper.__proto__ || Object.getPrototypeOf(PromisesWrapper)
+      ).call(this, props),
+    );
+
+    _this.state = { loading: true };
+    return _this;
+  }
+
+  createClass(PromisesWrapper, [
+    {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        var _this2 = this;
+
+        return Promise.all(Object.values(this.props.promisesMap))
+          .then(function(datas) {
+            var state = Object.keys(_this2.props.promisesMap).reduce(function(
+              acc,
+              key,
+              index,
+            ) {
+              return _extends({}, acc, defineProperty({}, key, datas[index]));
+            },
+            {});
+            _this2.setState(
+              _extends(
+                {
+                  loading: false,
+                  error: null,
+                },
+                state,
+              ),
+            );
+            return datas;
+          })
+          .catch(function(err) {
+            _this2.setState({
+              loading: false,
+              error: err,
+            });
+            return err;
+          });
+      },
+    },
+    {
+      key: 'render',
+      value: function render() {
+        var _state = this.state,
+          loading = _state.loading,
+          error = _state.error,
+          state = objectWithoutProperties(_state, ['loading', 'error']);
+
+        return this.props.render(
+          _extends({ loading: loading, error: error }, state),
+        );
+      },
+    },
+  ]);
+  return PromisesWrapper;
+})(React.Component);
+
+PromisesWrapper.propTypes = {
+  promisesMap: PropTypes.shape({}),
+  render: PropTypes.func.isRequired,
+};
+
+PromisesWrapper.defaultProps = {
+  promisesMap: {},
+};
+
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
 var withPromises = function withPromises(mapPromisesToProps) {
   return function(WrappedComponent) {
-    var WithPromises = (function(_React$Component) {
-      inherits(WithPromises, _React$Component);
-
-      function WithPromises(props) {
-        classCallCheck(this, WithPromises);
-
-        var _this = possibleConstructorReturn(
-          this,
-          (WithPromises.__proto__ || Object.getPrototypeOf(WithPromises)).call(
-            this,
-            props,
-          ),
-        );
-
-        _this.state = { loading: true };
-        return _this;
-      }
-
-      createClass(WithPromises, [
-        {
-          key: 'componentDidMount',
-          value: function componentDidMount() {
-            var _this2 = this;
-
-            return Promise.all(Object.values(mapPromisesToProps))
-              .then(function(datas) {
-                var state = Object.keys(mapPromisesToProps).reduce(function(
-                  acc,
-                  key,
-                  index,
-                ) {
-                  return _extends(
-                    {},
-                    acc,
-                    defineProperty({}, key, datas[index]),
-                  );
-                },
-                {});
-                _this2.setState(
-                  _extends(
-                    {
-                      loading: false,
-                      error: null,
-                    },
-                    state,
-                  ),
-                );
-                return datas;
-              })
-              .catch(function(err) {
-                _this2.setState({
-                  loading: false,
-                  error: err,
-                });
-                return err;
-              });
-          },
+    var WithPromises = function WithPromises(props) {
+      return React.createElement(PromisesWrapper, {
+        promisesMap: mapPromisesToProps,
+        render: function render(datas) {
+          return React.createElement(
+            WrappedComponent,
+            _extends({}, datas, props),
+          );
         },
-        {
-          key: 'render',
-          value: function render() {
-            return React.createElement(
-              WrappedComponent,
-              _extends({}, this.props, this.state),
-            );
-          },
-        },
-      ]);
-      return WithPromises;
-    })(React.Component);
+      });
+    };
 
     WithPromises.displayName =
       'withPromises(' + getDisplayName(WrappedComponent) + ')';
