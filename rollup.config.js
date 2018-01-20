@@ -14,6 +14,7 @@ export default [
     external: ['react'],
     globals: {
       react: 'React',
+      PropTypes: 'PropTypes',
     },
     name: 'reactHocPromises',
     plugins: [
@@ -33,7 +34,7 @@ export default [
   {
     input: 'src/withPromises.js',
     output: { file: pkg.common, format: 'cjs' },
-    external: ['react'],
+    external: ['react', 'prop-types'],
     plugins: [
       babel({
         exclude: ['node_modules/**'],
@@ -42,7 +43,7 @@ export default [
   },
   {
     input: 'src/withPromises.js',
-    external: ['react'],
+    external: ['react', 'prop-types'],
     output: { file: pkg.main, format: 'es' },
     plugins: [
       babel({
