@@ -5,20 +5,24 @@ class PromisesWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = { loading: true };
+    this._mounted = false;
   }
 
   componentDidMount() {
+    this._mounted = true;
     return Promise.all(Object.values(this.props.promisesMap))
       .then(datas => {
-        const state = Object.keys(this.props.promisesMap).reduce(
-          (acc, key, index) => ({ ...acc, [key]: datas[index] }),
-          {},
-        );
-        this.setState({
-          loading: false,
-          error: null,
-          ...state,
-        });
+        if (this._mounted) {
+          const state = Object.keys(this.props.promisesMap).reduce(
+            (acc, key, index) => ({ ...acc, [key]: datas[index] }),
+            {},
+          );
+          this.setState({
+            loading: false,
+            error: null,
+            ...state,
+          });
+        }
         return datas;
       })
       .catch(err => {
@@ -28,6 +32,10 @@ class PromisesWrapper extends React.Component {
         });
         return err;
       });
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
   }
 
   render() {

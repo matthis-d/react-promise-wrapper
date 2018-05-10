@@ -1532,6 +1532,7 @@ object-assign
       );
 
       _this.state = { loading: true };
+      _this._mounted = false;
       return _this;
     }
 
@@ -1541,25 +1542,30 @@ object-assign
         value: function componentDidMount() {
           var _this2 = this;
 
+          this._mounted = true;
           return Promise.all(Object.values(this.props.promisesMap))
             .then(function(datas) {
-              var state = Object.keys(_this2.props.promisesMap).reduce(function(
-                acc,
-                key,
-                index,
-              ) {
-                return _extends({}, acc, defineProperty({}, key, datas[index]));
-              },
-              {});
-              _this2.setState(
-                _extends(
-                  {
-                    loading: false,
-                    error: null,
+              if (_this2._mounted) {
+                var state = Object.keys(_this2.props.promisesMap).reduce(
+                  function(acc, key, index) {
+                    return _extends(
+                      {},
+                      acc,
+                      defineProperty({}, key, datas[index]),
+                    );
                   },
-                  state,
-                ),
-              );
+                  {},
+                );
+                _this2.setState(
+                  _extends(
+                    {
+                      loading: false,
+                      error: null,
+                    },
+                    state,
+                  ),
+                );
+              }
               return datas;
             })
             .catch(function(err) {
@@ -1569,6 +1575,12 @@ object-assign
               });
               return err;
             });
+        },
+      },
+      {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+          this._mounted = false;
         },
       },
       {
