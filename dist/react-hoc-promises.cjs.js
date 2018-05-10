@@ -244,49 +244,84 @@ var PromisesWrapper = (function(_React$Component) {
 
   createClass(PromisesWrapper, [
     {
-      key: 'componentDidMount',
-      value: function componentDidMount() {
+      key: '_setupPromises',
+      value: function _setupPromises(oldProps) {
         var _this2 = this;
-
-        this._mounted = true;
 
         var mapPromisesToProps = this.props.mapPromisesToProps;
 
+        var oldPromisesMap = this._promisesMap;
         var promisesMap =
           typeof mapPromisesToProps === 'function'
-            ? mapPromisesToProps(this.props)
+            ? mapPromisesToProps(this.props, oldProps, oldPromisesMap)
             : mapPromisesToProps;
 
-        return Promise.all(Object.values(promisesMap))
-          .then(function(datas) {
-            if (_this2._mounted) {
-              var state = Object.keys(promisesMap).reduce(function(
-                acc,
-                key,
-                index,
-              ) {
-                return _extends({}, acc, defineProperty({}, key, datas[index]));
-              },
-              {});
-              _this2.setState(
-                _extends(
-                  {
-                    loading: false,
-                    error: null,
-                  },
-                  state,
-                ),
-              );
-            }
-            return datas;
+        this._promisesMap = promisesMap;
+
+        var promises = Object.values(promisesMap);
+        var oldPromises = oldPromisesMap && Object.values(oldPromisesMap);
+        if (
+          !oldPromises ||
+          promises.length !== oldPromises.length ||
+          promises.find(function(p, i) {
+            return p !== oldPromises[i];
           })
-          .catch(function(err) {
-            _this2.setState({
-              loading: false,
-              error: err,
+        ) {
+          if (this._mounted) {
+            this.setState({
+              loading: true,
             });
-            return err;
-          });
+          }
+          this._promise = Promise.all(Object.values(promisesMap))
+            .then(function(datas) {
+              // Ignore results if this request has been superceded
+              if (_this2._mounted && promisesMap === _this2._promisesMap) {
+                var state = Object.keys(promisesMap).reduce(function(
+                  acc,
+                  key,
+                  index,
+                ) {
+                  return _extends(
+                    {},
+                    acc,
+                    defineProperty({}, key, datas[index]),
+                  );
+                },
+                {});
+                _this2.setState(
+                  _extends(
+                    {
+                      loading: false,
+                      error: null,
+                    },
+                    state,
+                  ),
+                );
+              }
+              return datas;
+            })
+            .catch(function(err) {
+              _this2.setState({
+                loading: false,
+                error: err,
+              });
+              return err;
+            });
+        }
+        return this._promise || Promise.resolve({});
+      },
+    },
+    {
+      key: 'componentDidUpdate',
+      value: function componentDidUpdate(oldProps) {
+        this._setupPromises(oldProps);
+      },
+    },
+    {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        this._mounted = true;
+        return this._setupPromises();
       },
     },
     {
