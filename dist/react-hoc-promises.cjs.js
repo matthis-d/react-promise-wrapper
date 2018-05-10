@@ -249,10 +249,18 @@ var PromisesWrapper = (function(_React$Component) {
         var _this2 = this;
 
         this._mounted = true;
-        return Promise.all(Object.values(this.props.promisesMap))
+
+        var mapPromisesToProps = this.props.mapPromisesToProps;
+
+        var promisesMap =
+          typeof mapPromisesToProps === 'function'
+            ? mapPromisesToProps(this.props)
+            : mapPromisesToProps;
+
+        return Promise.all(Object.values(promisesMap))
           .then(function(datas) {
             if (_this2._mounted) {
-              var state = Object.keys(_this2.props.promisesMap).reduce(function(
+              var state = Object.keys(promisesMap).reduce(function(
                 acc,
                 key,
                 index,
@@ -305,12 +313,15 @@ var PromisesWrapper = (function(_React$Component) {
 })(React.Component);
 
 PromisesWrapper.propTypes = {
-  promisesMap: PropTypes.shape({}),
+  mapPromisesToProps: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.func,
+  ]),
   render: PropTypes.func.isRequired,
 };
 
 PromisesWrapper.defaultProps = {
-  promisesMap: {},
+  mapPromisesToProps: {},
 };
 
 function getDisplayName(WrappedComponent) {
@@ -321,7 +332,7 @@ var withPromises = function withPromises(mapPromisesToProps) {
   return function(WrappedComponent) {
     var WithPromises = function WithPromises(props) {
       return React.createElement(PromisesWrapper, {
-        promisesMap: mapPromisesToProps,
+        mapPromisesToProps: mapPromisesToProps,
         render: function render(datas) {
           return React.createElement(
             WrappedComponent,

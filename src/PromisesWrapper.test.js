@@ -8,40 +8,46 @@ describe('withPromises wrapper', () => {
   let wrapperBuilder;
   let wrapper;
   let render;
-  let promisesMap;
+  let mapPromisesToProps;
 
   beforeEach(() => {
     WrappedComponent = () => <div />;
     render = data => <WrappedComponent {...data} />;
     wrapperBuilder = map =>
-      shallow(<PromisesWrapper promisesMap={map} render={render} />);
+      shallow(
+        <PromisesWrapper
+          mapPromisesToProps={map}
+          render={render}
+          test="test"
+        />,
+      );
   });
 
   it('should render the WrappedComponent', () => {
-    promisesMap = {
+    mapPromisesToProps = {
       myPromise: Promise.resolve('some data'),
     };
 
-    wrapper = wrapperBuilder(promisesMap);
+    wrapper = wrapperBuilder(mapPromisesToProps);
 
     expect(wrapper.find(WrappedComponent)).toBePresent();
   });
 
   it('should set loading prop to WrappedComponent', () => {
-    promisesMap = {
+    mapPromisesToProps = {
       myPromise: Promise.resolve('some data'),
     };
 
-    wrapper = wrapperBuilder(promisesMap);
+    wrapper = wrapperBuilder(mapPromisesToProps);
 
     expect(wrapper.find(WrappedComponent)).toHaveProp('loading', true);
   });
 
   it('should set myPromise prop to WrappedComponent when promise is resolved', async () => {
     const myPromise = Promise.resolve('some data');
-    promisesMap = { myPromise };
+    mapPromisesToProps = { myPromise };
 
-    wrapper = wrapperBuilder(promisesMap);
+    wrapper = wrapperBuilder(mapPromisesToProps);
 
     await wrapper.instance().componentDidMount();
     //  State was updated, but not re-rendered yet.
@@ -51,13 +57,26 @@ describe('withPromises wrapper', () => {
     expect(wrapper.find(WrappedComponent)).toHaveProp('loading', false);
   });
 
+  it('should allow promises to be specified in a callback', async () => {
+    mapPromisesToProps = props => ({ myPromise: Promise.resolve(props.test) });
+
+    wrapper = wrapperBuilder(mapPromisesToProps);
+
+    await wrapper.instance().componentDidMount();
+    //  State was updated, but not re-rendered yet.
+    wrapper.update();
+
+    expect(wrapper.find(WrappedComponent)).toHaveProp('myPromise', 'test');
+    expect(wrapper.find(WrappedComponent)).toHaveProp('loading', false);
+  });
+
   it('should set allPromises into WrappedComponent props when promises are resolved', async () => {
     const myPromise1 = Promise.resolve('some data 1');
     const myPromise2 = Promise.resolve('some data 2');
     const myPromise3 = Promise.resolve('some data 3');
     const myPromise4 = Promise.resolve('some data 4');
     const myPromise5 = Promise.resolve('some data 5');
-    promisesMap = {
+    mapPromisesToProps = {
       myPromise1,
       myPromise2,
       myPromise3,
@@ -65,7 +84,7 @@ describe('withPromises wrapper', () => {
       myPromise5,
     };
 
-    wrapper = wrapperBuilder(promisesMap);
+    wrapper = wrapperBuilder(mapPromisesToProps);
 
     await wrapper.instance().componentDidMount();
     //  State was updated, but not re-rendered yet.
@@ -100,7 +119,7 @@ describe('withPromises wrapper', () => {
     const myPromise3 = Promise.resolve('some data 3');
     const myPromise4 = Promise.reject('error');
     const myPromise5 = Promise.resolve('some data 5');
-    promisesMap = {
+    mapPromisesToProps = {
       myPromise1,
       myPromise2,
       myPromise3,
@@ -108,7 +127,7 @@ describe('withPromises wrapper', () => {
       myPromise5,
     };
 
-    wrapper = wrapperBuilder(promisesMap);
+    wrapper = wrapperBuilder(mapPromisesToProps);
 
     try {
       await wrapper.instance().componentDidMount();
@@ -139,9 +158,9 @@ describe('withPromises wrapper', () => {
 
   it('should set myValue prop to WrappedComponent when it is only a value', async () => {
     const myValue = 'A value';
-    promisesMap = { myValue };
+    mapPromisesToProps = { myValue };
 
-    wrapper = wrapperBuilder(promisesMap);
+    wrapper = wrapperBuilder(mapPromisesToProps);
 
     await wrapper.instance().componentDidMount();
 

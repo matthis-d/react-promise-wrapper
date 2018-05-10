@@ -1543,19 +1543,29 @@ object-assign
           var _this2 = this;
 
           this._mounted = true;
-          return Promise.all(Object.values(this.props.promisesMap))
+
+          var mapPromisesToProps = this.props.mapPromisesToProps;
+
+          var promisesMap =
+            typeof mapPromisesToProps === 'function'
+              ? mapPromisesToProps(this.props)
+              : mapPromisesToProps;
+
+          return Promise.all(Object.values(promisesMap))
             .then(function(datas) {
               if (_this2._mounted) {
-                var state = Object.keys(_this2.props.promisesMap).reduce(
-                  function(acc, key, index) {
-                    return _extends(
-                      {},
-                      acc,
-                      defineProperty({}, key, datas[index]),
-                    );
-                  },
-                  {},
-                );
+                var state = Object.keys(promisesMap).reduce(function(
+                  acc,
+                  key,
+                  index,
+                ) {
+                  return _extends(
+                    {},
+                    acc,
+                    defineProperty({}, key, datas[index]),
+                  );
+                },
+                {});
                 _this2.setState(
                   _extends(
                     {
@@ -1601,12 +1611,15 @@ object-assign
   })(React.Component);
 
   PromisesWrapper.propTypes = {
-    promisesMap: propTypes.shape({}),
+    mapPromisesToProps: propTypes.oneOfType([
+      propTypes.shape({}),
+      propTypes.func,
+    ]),
     render: propTypes.func.isRequired,
   };
 
   PromisesWrapper.defaultProps = {
-    promisesMap: {},
+    mapPromisesToProps: {},
   };
 
   function getDisplayName(WrappedComponent) {
@@ -1617,7 +1630,7 @@ object-assign
     return function(WrappedComponent) {
       var WithPromises = function WithPromises(props) {
         return React.createElement(PromisesWrapper, {
-          promisesMap: mapPromisesToProps,
+          mapPromisesToProps: mapPromisesToProps,
           render: function render(datas) {
             return React.createElement(
               WrappedComponent,

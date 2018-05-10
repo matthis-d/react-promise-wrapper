@@ -10,10 +10,17 @@ class PromisesWrapper extends React.Component {
 
   componentDidMount() {
     this._mounted = true;
-    return Promise.all(Object.values(this.props.promisesMap))
+
+    const { mapPromisesToProps } = this.props;
+    const promisesMap =
+      typeof mapPromisesToProps === 'function'
+        ? mapPromisesToProps(this.props)
+        : mapPromisesToProps;
+
+    return Promise.all(Object.values(promisesMap))
       .then(datas => {
         if (this._mounted) {
-          const state = Object.keys(this.props.promisesMap).reduce(
+          const state = Object.keys(promisesMap).reduce(
             (acc, key, index) => ({ ...acc, [key]: datas[index] }),
             {},
           );
@@ -45,12 +52,15 @@ class PromisesWrapper extends React.Component {
 }
 
 PromisesWrapper.propTypes = {
-  promisesMap: PropTypes.shape({}),
+  mapPromisesToProps: PropTypes.oneOfType([
+    PropTypes.shape({}),
+    PropTypes.func,
+  ]),
   render: PropTypes.func.isRequired,
 };
 
 PromisesWrapper.defaultProps = {
-  promisesMap: {},
+  mapPromisesToProps: {},
 };
 
 export default PromisesWrapper;
