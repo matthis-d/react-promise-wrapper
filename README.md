@@ -62,7 +62,7 @@ const WrappedComponent = withPromises({
 You can also pass a function to withPromise, so that you are able to fetch multiple times as the component is updated. The above example would be modified to look like this:
 
 ```js
-const WrappedComponent = withPromises((props, oldProps, oldPromises){
+const WrappedComponent = withPromises((props, oldProps, oldPromises) => {
   user: props.id !== oldProps.id ?
     fetch(`/users/${props.id}`).then(res => res.json()) :
     oldPromises.user,
