@@ -8,7 +8,7 @@ function getDisplayName(WrappedComponent) {
 const withPromises = mapPromisesToProps => WrappedComponent => {
   const WithPromises = props => (
     <PromisesWrapper
-      promisesMap={mapPromisesToProps}
+      mapPromisesToProps={mapPromisesToProps}
       render={datas => <WrappedComponent {...datas} {...props} />}
     />
   );
